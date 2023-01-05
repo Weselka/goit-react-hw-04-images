@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import { AiOutlineSearch } from 'react-icons/ai';
@@ -12,41 +12,26 @@ import {
   SearchFormInput,
 } from './Searchbar.styled';
 
-export class Searchbar extends Component {
-  static propTypes = {
-    state: PropTypes.shape({
-      imagesName: PropTypes.string.isRequired,
-      handleChange: PropTypes.func.isRequired,
-      handleSubmit: PropTypes.func.isRequired,
-    }),
-    onSubmit: PropTypes.func.isRequired,
+export const Searchbar = ({onSubmit}) => {
+  const [imagesName, setImagesName] = useState('');
+
+  const handleChange = e => {
+    setImagesName(e.currentTarget.value.toLowerCase());
   };
 
-  state = {
-    imagesName: '',
-  };
-
-  handleChange = e => {
-    this.setState({ imagesName: e.currentTarget.value.toLowerCase() });
-  };
-
-  handleSubmit = e => {
-    e.preventDefault();
-    const { imagesName } = this.state;
-    const { onSubmit } = this.props;
+  const handleSubmit = e => {
+    e.preventDefault();    
 
     if (imagesName.trim() === '') {
       return toast.error('Enter a name');
     }
     onSubmit(imagesName);
-    this.setState({ imagesName: '' });
+    setImagesName('');
   };
 
-  render() {
-    const { imagesName } = this.state;
     return (
       <SearchbarHeader>
-        <FormBlock onSubmit={this.handleSubmit}>
+        <FormBlock onSubmit={handleSubmit}>
           <SearchFormButton type="submit">
             <AiOutlineSearch fill={theme.fills.dark} />
             <SearchFormButtonLabel>Search</SearchFormButtonLabel>
@@ -57,11 +42,19 @@ export class Searchbar extends Component {
             autoFocus
             placeholder="Search images and photos"
             value={imagesName}
-            onChange={this.handleChange}
+            onChange={handleChange}
             name="name"
           />
         </FormBlock>
       </SearchbarHeader>
     );
-  }
 }
+  
+  Searchbar.propTypes = {
+    state: PropTypes.shape({
+      imagesName: PropTypes.string.isRequired,
+      handleChange: PropTypes.func.isRequired,
+      handleSubmit: PropTypes.func.isRequired,
+    }),
+    onSubmit: PropTypes.func.isRequired,
+  };
