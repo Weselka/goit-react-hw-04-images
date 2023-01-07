@@ -1,53 +1,44 @@
 import PropTypes from 'prop-types';
-import { Component } from 'react';
+import { useState } from 'react';
 import { ImageGalleryLi, ImageGalleryImage } from './ImageGalleryItem.styled';
 import { Modal } from 'components';
 
-export class ImageGalleryItem extends Component {
-  static propTypes = {
-    state: PropTypes.shape({
-      showModal: PropTypes.bool.isRequired,
-      toggleModal: PropTypes.func.isRequired,
-    }),
-    image: PropTypes.shape({
-      id: PropTypes.number.isRequired,
-      webformatURL: PropTypes.string.isRequired,
-      tags: PropTypes.string.isRequired,
-      largeImageURL: PropTypes.string.isRequired,
-    }),
+export const ImageGalleryItem = ({ image }) => {
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  const selectImage = largeImageURL => {
+    setSelectedImage(largeImageURL);
   };
 
-  state = {
-    showModal: false,
+  const closeModal = () => {
+    setSelectedImage(!selectedImage);
   };
 
-  toggleModal = () => {
-    this.setState(({ showModal }) => ({
-      showModal: !showModal,
-    }));
-  };
+  return (
+    <ImageGalleryLi key={image.id} onClick={() => selectImage(image)}>
+      <ImageGalleryImage
+        src={image.webformatURL}
+        alt={image.tags}
+        width="240"
+        loading="lazy"
+      ></ImageGalleryImage>
+      {selectedImage && (
+        <Modal onClose={closeModal}>
+          <img key={image.id} src={image.largeImageURL} alt={image.tags}></img>
+        </Modal>
+      )}
+    </ImageGalleryLi>
+  );
+};
 
-  render() {
-    const { image } = this.props;
-
-    return (
-      <ImageGalleryLi key={image.id} onClick={this.toggleModal}>
-        <ImageGalleryImage
-          src={image.webformatURL}
-          alt={image.tags}
-          width="240"
-          loading="lazy"
-        ></ImageGalleryImage>
-        {this.state.showModal && (
-          <Modal onClose={this.toggleModal}>
-            <img
-              key={image.id}
-              src={image.largeImageURL}
-              alt={image.tags}
-            ></img>
-          </Modal>
-        )}
-      </ImageGalleryLi>
-    );
-  }
-}
+ImageGalleryItem.propTypes = {
+  state: PropTypes.shape({
+    selectImage: PropTypes.func.isRequired,
+  }),
+  image: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    webformatURL: PropTypes.string.isRequired,
+    tags: PropTypes.string.isRequired,
+    largeImageURL: PropTypes.string.isRequired,
+  }),
+};
