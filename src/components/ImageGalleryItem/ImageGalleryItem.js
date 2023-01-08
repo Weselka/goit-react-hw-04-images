@@ -4,29 +4,22 @@ import { ImageGalleryLi, ImageGalleryImage } from './ImageGalleryItem.styled';
 import { Modal } from 'components';
 
 export const ImageGalleryItem = ({ image }) => {
-  const [selectedImage, setSelectedImage] = useState(null);
 
-  const selectImage = largeImageURL => {
-    setSelectedImage(largeImageURL);
-  };
-
-  const closeModal = () => {
-    setSelectedImage(!selectedImage);
-  };
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
-    <ImageGalleryLi key={image.id} onClick={() => selectImage(image)}>
+    <ImageGalleryLi key={image.id} onClick={() => setIsModalOpen(true)}>
       <ImageGalleryImage
         src={image.webformatURL}
         alt={image.tags}
         width="240"
         loading="lazy"
       ></ImageGalleryImage>
-      {selectedImage && (
-        <Modal onClose={closeModal}>
-          <img key={image.id} src={image.largeImageURL} alt={image.tags}></img>
-        </Modal>
-      )}
+      {isModalOpen && (
+      <Modal onClose={() => setIsModalOpen(false)}>
+        <img key={image.id} src={image.largeImageURL} alt={image.tags}></img>
+      </Modal>
+      )} 
     </ImageGalleryLi>
   );
 };
