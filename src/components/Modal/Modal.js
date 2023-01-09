@@ -15,10 +15,12 @@ export const Modal = ({ children, onClose }) => {
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
     };
-  });
+  }, [onClose]);
 
   const handleOverlayClick = e => {
-    if (e.currentTarget !== e.target) {
+    console.log(e.currentTarget);
+    console.log(e.target);
+    if (e.currentTarget === e.target) {
       onClose();
     }
   };
