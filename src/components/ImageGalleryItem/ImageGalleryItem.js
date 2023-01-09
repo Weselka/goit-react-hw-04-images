@@ -5,21 +5,25 @@ import { Modal } from 'components';
 
 export const ImageGalleryItem = ({ image }) => {
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showModal, setshowModal] = useState(false);
+
+  const toggleModal = () => {
+    setshowModal(!showModal);
+  };
 
   return (
-    <ImageGalleryLi key={image.id} onClick={() => setIsModalOpen(true)}>
+    <ImageGalleryLi key={image.id} onClick={toggleModal}>
       <ImageGalleryImage
         src={image.webformatURL}
         alt={image.tags}
         width="240"
         loading="lazy"
       ></ImageGalleryImage>
-      {isModalOpen && (
-      <Modal onClose={() => setIsModalOpen(false)}>
-        <img key={image.id} src={image.largeImageURL} alt={image.tags}></img>
-      </Modal>
-      )} 
+      {showModal && (
+        <Modal onClose={toggleModal}>
+          <img key={image.id} src={image.largeImageURL} alt={image.tags}></img>
+        </Modal>
+      )}
     </ImageGalleryLi>
   );
 };

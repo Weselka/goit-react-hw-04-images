@@ -18,8 +18,6 @@ export const Modal = ({ children, onClose }) => {
   }, [onClose]);
 
   const handleOverlayClick = e => {
-    console.log(e.currentTarget);
-    console.log(e.target);
     if (e.currentTarget === e.target) {
       onClose();
     }
